@@ -32,16 +32,16 @@ const HeroSection = () => {
           tells a story of craftsmanship and history from around the world.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
+        <div className="flex justify-center gap-6 animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
           <Button 
-            className="bg-brass hover:bg-mahogany text-white border border-brass px-8 py-6"
+            className="bg-brass hover:bg-mahogany text-white border border-brass px-8 py-2"
             onClick={() => window.location.href = "#collection"}
           >
             Explore Our Collection
           </Button>
           <Button 
             variant="outline" 
-            className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6"
+            className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-2"
             onClick={() => window.location.href = "#contact"}
           >
             Book a Private Viewing
