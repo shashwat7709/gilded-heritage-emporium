@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Form submission placeholder
+    console.log('Form submitted:', formData);
+    // Reset form
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  };
+
   return (
     <section id="contact" className="py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -37,7 +59,7 @@ const ContactSection = () => {
               <div>
                 <h3 className="font-serif text-xl text-text mb-2">Contact</h3>
                 <p className="text-text/70">Phone: (555) 123-4567</p>
-                <p className="text-text/70">Email: info@vintagecottage.com</p>
+                <p className="text-text/70">Email: shashwat7709@gmail.com</p>
               </div>
             </div>
           </motion.div>
@@ -50,7 +72,7 @@ const ContactSection = () => {
             className="bg-white p-8 rounded-lg shadow-lg"
           >
             <h3 className="text-2xl font-serif text-text mb-6">Send us a Message</h3>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-text/70 mb-2">
@@ -59,6 +81,10 @@ const ContactSection = () => {
                   <input
                     type="text"
                     id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-2 border border-accent rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                     placeholder="Your name"
                   />
@@ -70,6 +96,10 @@ const ContactSection = () => {
                   <input
                     type="email"
                     id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-2 border border-accent rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                     placeholder="Your email"
                   />
@@ -83,6 +113,10 @@ const ContactSection = () => {
                 <input
                   type="text"
                   id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-2 border border-accent rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                   placeholder="Message subject"
                 />
@@ -94,15 +128,22 @@ const ContactSection = () => {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   rows={4}
                   className="w-full px-4 py-2 border border-accent rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
                   placeholder="Your message"
                 ></textarea>
               </div>
 
-              <Button className="w-full bg-primary text-text-light hover:bg-primary-dark transition-colors duration-300">
+              <button
+                type="submit"
+                className="w-full px-6 py-3 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors duration-300 font-display text-sm tracking-wide"
+              >
                 Send Message
-              </Button>
+              </button>
             </form>
           </motion.div>
         </div>

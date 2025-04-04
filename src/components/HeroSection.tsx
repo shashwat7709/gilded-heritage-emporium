@@ -1,57 +1,65 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import Navigation from './Navigation';
 
 const HeroSection = () => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ 
-          backgroundImage: "url('/lovable-uploads/c0545fd9-2f31-4ca6-92f1-1959793c7ae1.png')",
-          backgroundPosition: "center"
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-shadow/90 to-shadow/70"></div>
+    <section className="relative min-h-screen flex items-center justify-center bg-ebony overflow-hidden">
+      {/* Background Image with lighter overlay */}
+      <div className="absolute inset-0">
+        <img 
+          src="/photos/2021-09-26 (1).png" 
+          alt="Heritage Background" 
+          className="object-cover w-full h-full brightness-90"
+        />
+        {/* Lighter overlay for better image visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ebony/60 via-ebony/40 to-ebony/60" />
       </div>
 
-      {/* Hero Content */}
-      <div className="container mx-auto px-4 relative z-10 flex flex-col items-start justify-center h-full">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-playfair font-bold text-porcelain mb-4 leading-tight">
-            <span className="block">THE</span>
-            <span className="block">VINTAGE</span>
-            <span className="block">COTTAGE</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-porcelain/90 mb-8 max-w-lg">
-            Experience the perfect blend of tradition and timeless elegance
-          </p>
-          
-          <div className="flex gap-6">
-            <Button 
-              variant="outline"
-              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-6 py-3 text-sm uppercase tracking-wider"
-              onClick={() => window.location.href = "#collection"}
-            >
-              Explore Menu
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-6 py-3 text-sm uppercase tracking-wider"
-              onClick={() => window.location.href = "#our-story"}
-            >
-              About Us
-            </Button>
-          </div>
-        </div>
+      {/* Navigation */}
+      <Navigation />
 
-        {/* Coffee Cup Image */}
-        <div className="absolute right-20 bottom-1/3 hidden lg:block">
-          <img src="/vintage-cup.png" alt="Coffee Cup" className="w-64 h-auto" />
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-4 mt-24 text-center">
+        <motion.h1 
+          className="text-4xl md:text-6xl lg:text-7xl font-display text-gold mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          The Vintage Cottage
+        </motion.h1>
+        <motion.p 
+          className="text-lg md:text-xl text-ivory/90 max-w-2xl mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          Discover timeless treasures and antique wonders in our carefully curated collection
+        </motion.p>
+      </div>
+
+      {/* Decorative Corner Borders */}
+      <div className="absolute top-8 left-8 w-32 h-32 border-l-2 border-t-2 border-gold/50" />
+      <div className="absolute top-8 right-8 w-32 h-32 border-r-2 border-t-2 border-gold/50" />
+      <div className="absolute bottom-8 left-8 w-32 h-32 border-l-2 border-b-2 border-gold/50" />
+      <div className="absolute bottom-8 right-8 w-32 h-32 border-r-2 border-b-2 border-gold/50" />
+
+      {/* Certified Authentic Badge */}
+      <div className="absolute top-6 right-8 z-20">
+        <div className="bg-[#46392d]/90 text-ivory px-6 py-3 rounded-lg border border-gold/20 shadow-lg backdrop-blur-sm">
+          <span className="font-display text-sm uppercase tracking-wider">Certified Authentic</span>
         </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-ivory flex flex-col items-center z-20">
+        <span className="text-sm font-body mb-4 text-gold drop-shadow-lg">Scroll to Explore</span>
+        <motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="w-0.5 h-16 bg-gradient-to-b from-gold to-transparent"
+        />
       </div>
     </section>
   );

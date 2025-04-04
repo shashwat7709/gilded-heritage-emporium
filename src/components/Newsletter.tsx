@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const Newsletter = () => {
   return (
-    <section className="py-24 bg-primary/5 relative overflow-hidden">
+    <section className="py-24 bg-[#F5F1EA] relative overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-paisley-pattern opacity-5" />
@@ -18,32 +18,25 @@ const Newsletter = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto text-center"
         >
-          <div className="inline-block mb-4">
-            <h2 className="text-3xl md:text-4xl font-display text-text relative">
-              Join Our Heritage Circle
-              <div className="absolute -bottom-2 left-0 w-full h-1 bg-primary/20" />
-            </h2>
-          </div>
-          <p className="text-text/70 mb-8 max-w-2xl mx-auto font-body">
+          <h2 className="text-3xl md:text-4xl font-display text-[#46392d] mb-4">
+            Join Our Heritage Circle
+          </h2>
+          <p className="text-[#46392d]/70 mb-8 max-w-2xl mx-auto font-body text-base">
             Subscribe to receive updates about new arrivals, exclusive invitations to cultural events, and insights into Indian heritage
           </p>
 
-          <form className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center max-w-xl mx-auto">
             <input
               type="email"
               placeholder="Enter your email address"
-              className="flex-1 px-6 py-3 rounded-full border-2 border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-background/80 backdrop-blur-sm font-body"
+              className="w-full px-4 py-2.5 rounded-md bg-white border border-[#46392d]/20 text-[#46392d] placeholder-[#46392d]/50"
             />
-            <button
-              type="submit"
-              className="px-8 py-3 bg-primary text-text-light rounded-full hover:bg-primary-dark transition-colors duration-300 whitespace-nowrap font-display group relative overflow-hidden"
-            >
-              <span className="relative z-10">Subscribe Now</span>
-              <div className="absolute inset-0 bg-primary-dark transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+            <button className="whitespace-nowrap px-6 py-2.5 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors duration-300 font-display text-sm tracking-wide">
+              Subscribe Now
             </button>
-          </form>
+          </div>
 
-          <p className="text-text/50 text-sm mt-4 font-body">
+          <p className="text-[#46392d]/60 text-sm mt-4">
             By subscribing, you agree to receive our newsletter. Your privacy is important to us.
           </p>
 
