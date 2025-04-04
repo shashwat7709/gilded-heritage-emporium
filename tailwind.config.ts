@@ -1,5 +1,5 @@
-
 import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
 	darkMode: ["class"],
@@ -8,6 +8,8 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./index.html",
+		"./src/**/*.{js,jsx}"
 	],
 	prefix: "",
 	theme: {
@@ -20,59 +22,53 @@ export default {
 		},
 		extend: {
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				border: '#D4AF37',
+				input: '#FFF5E1',
+				ring: '#D4AF37',
+				background: '#FFF5E1',
+				foreground: '#2C1810',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#C41E3A',
+					light: '#D64D66',
+					dark: '#8B1529'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: '#D4AF37',
+					foreground: '#FFF5E1'
 				},
 				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
+					DEFAULT: '#881337',
+					foreground: '#FFF5E1'
 				},
 				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
+					DEFAULT: '#FFF5E1',
+					foreground: '#2C1810'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					DEFAULT: '#0C6B58',
+					light: '#1A8870',
+					dark: '#0A4F42'
 				},
 				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
+					DEFAULT: '#FFF5E1',
+					foreground: '#2C1810'
 				},
 				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
+					DEFAULT: '#FFF5E1',
+					foreground: '#2C1810'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				text: {
+					DEFAULT: '#2C1810',
+					light: '#FFF5E1'
 				},
-				// Custom colors based on the antique shop image
-				cream: '#F5F2E9',
-				brass: '#A89054',
-				'brass-light': '#C4B581',
-				'brass-dark': '#7E6B3A',
-				mahogany: '#8C4A3B',
-				'dark-wood': '#4A3728',
-				'light-wood': '#C0A080',
-				porcelain: '#E8E4D9',
-				shadow: '#2C241D'
+				saffron: '#FF9933',
+				indianRed: '#C41E3A',
+				peacockBlue: '#0C6B58',
+				gold: '#D4AF37',
+				maroon: '#800000',
+				turmeric: '#FFC72C',
+				mehendi: '#2D5A27',
+				lotus: '#FE85A0'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -114,12 +110,18 @@ export default {
 			},
 			backgroundImage: {
 				'texture-pattern': "url('/texture-pattern.jpg')",
-				'hero-bg': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('/hero-bg.jpg')"
+				'hero-bg': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('/hero-bg.jpg')",
+				'paisley-pattern': "url('/patterns/paisley.png')",
+				'mandala-light': "url('/patterns/mandala-light.png')",
+				'mandala-dark': "url('/patterns/mandala-dark.png')",
+				'border-pattern': "url('/patterns/border.png')"
 			},
 			fontFamily: {
-				'playfair': ['Playfair Display', 'serif'],
-				'lora': ['Lora', 'serif'],
-				'cormorant': ['Cormorant Garamond', 'serif']
+				sans: ["var(--font-sans)", ...fontFamily.sans],
+				serif: ["Rozha One", ...fontFamily.serif],
+				display: ["Rozha One", ...fontFamily.serif],
+				decorative: ["Rozha One", ...fontFamily.serif],
+				body: ["Glegoo", ...fontFamily.serif]
 			}
 		}
 	},

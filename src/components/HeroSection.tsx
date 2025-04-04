@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -20,20 +19,20 @@ const HeroSection = () => {
       {/* Hero Content */}
       <div className="container mx-auto px-4 relative z-10 flex flex-col items-start justify-center h-full">
         <div className="max-w-2xl">
-          <h1 className="text-7xl md:text-8xl lg:text-9xl font-playfair font-bold text-porcelain mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-playfair font-bold text-porcelain mb-4 leading-tight">
             <span className="block">THE</span>
             <span className="block">VINTAGE</span>
             <span className="block">COTTAGE</span>
           </h1>
           
-          <p className="text-xl text-porcelain/90 mb-10 max-w-lg">
+          <p className="text-lg md:text-xl text-porcelain/90 mb-8 max-w-lg">
             Experience the perfect blend of tradition and timeless elegance
           </p>
           
           <div className="flex gap-6">
             <Button 
               variant="outline"
-              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6 uppercase tracking-wider"
+              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-6 py-3 text-sm uppercase tracking-wider"
               onClick={() => window.location.href = "#collection"}
             >
               Explore Menu
@@ -41,7 +40,7 @@ const HeroSection = () => {
             
             <Button 
               variant="outline"
-              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6 uppercase tracking-wider"
+              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-6 py-3 text-sm uppercase tracking-wider"
               onClick={() => window.location.href = "#our-story"}
             >
               About Us

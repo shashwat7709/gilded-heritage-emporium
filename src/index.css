@@ -1,7 +1,5 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Glegoo:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -45,11 +43,11 @@
   }
 
   body {
-    @apply bg-cream text-foreground font-lora;
+    @apply bg-background text-foreground font-body;
   }
   
   h1, h2, h3, h4 {
-    @apply font-playfair;
+    @apply font-display;
   }
   
   .ornate-border {
@@ -58,7 +56,7 @@
   
   .ornate-border::before,
   .ornate-border::after {
-    @apply content-[''] absolute w-20 h-20 bg-brass opacity-30;
+    @apply content-[''] absolute w-20 h-20 bg-primary opacity-30;
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20,0L0,20L0,80L80,0L20,0Z M60,80L80,60L80,0L0,80L60,80Z' fill='%23D4AF37'/%3E%3C/svg%3E");
     mask-size: contain;
     mask-repeat: no-repeat;
@@ -73,11 +71,11 @@
   }
   
   .gold-gradient {
-    @apply bg-gradient-to-r from-brass via-brass-light to-brass bg-[length:200%_100%] animate-slow-shine;
+    @apply bg-gradient-to-r from-gold via-saffron to-gold bg-[length:200%_100%] animate-slow-shine;
   }
   
   .antique-card {
-    @apply bg-cream border border-brass/30 p-6 rounded-sm shadow-md transition-all duration-300 hover:shadow-xl;
+    @apply bg-background border border-primary/30 p-6 rounded-sm shadow-md transition-all duration-300 hover:shadow-xl;
   }
   
   .decorative-divider {
@@ -86,10 +84,10 @@
   
   .decorative-divider::before,
   .decorative-divider::after {
-    @apply content-[''] bg-brass/50 h-[1px] w-full mx-4;
+    @apply content-[''] bg-primary/50 h-[1px] w-full mx-4;
   }
   
   .decorative-divider span {
-    @apply text-brass text-xl px-4;
+    @apply text-primary text-xl px-4;
   }
 }
