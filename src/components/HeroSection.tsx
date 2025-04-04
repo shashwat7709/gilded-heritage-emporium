@@ -2,7 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
 
 const HeroSection = () => {
   return (
@@ -11,50 +10,49 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{ 
-          backgroundImage: "url('/lovable-uploads/9f7c2b22-34d3-4649-be86-6d3783f3b2b1.png')",
+          backgroundImage: "url('/lovable-uploads/c0545fd9-2f31-4ca6-92f1-1959793c7ae1.png')",
           backgroundPosition: "center"
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-shadow/80 via-shadow/70 to-shadow/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-shadow/90 to-shadow/70"></div>
       </div>
 
       {/* Hero Content */}
-      <div className="container mx-auto px-4 relative z-10 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-7xl font-playfair font-bold text-porcelain mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.3s' }}>
-          <span className="block">Discover our</span>
-          <span className="text-brass-light italic">Vintage Treasures</span>
-        </h1>
-        
-        <div className="w-24 h-1 bg-brass mx-auto my-8 animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}></div>
-        
-        <p className="max-w-2xl mx-auto text-lg md:text-xl text-porcelain/90 mb-10 animate-fade-in opacity-0" style={{ animationDelay: '0.9s' }}>
-          Step into our cozy emporium of timeless treasures, where each piece 
-          tells a story of craftsmanship and history from around the world.
-        </p>
-        
-        <div className="flex justify-center gap-6 animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
-          <Button 
-            className="bg-brass hover:bg-mahogany text-white border border-brass px-8 py-2"
-            onClick={() => window.location.href = "#collection"}
-          >
-            Explore Our Collection
-          </Button>
-          <Button 
-            variant="outline" 
-            className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-2"
-            onClick={() => window.location.href = "#contact"}
-          >
-            Book a Private Viewing
-          </Button>
+      <div className="container mx-auto px-4 relative z-10 flex flex-col items-start justify-center h-full">
+        <div className="max-w-2xl">
+          <h1 className="text-7xl md:text-8xl lg:text-9xl font-playfair font-bold text-porcelain mb-6 leading-tight">
+            <span className="block">THE</span>
+            <span className="block">VINTAGE</span>
+            <span className="block">COTTAGE</span>
+          </h1>
+          
+          <p className="text-xl text-porcelain/90 mb-10 max-w-lg">
+            Experience the perfect blend of tradition and timeless elegance
+          </p>
+          
+          <div className="flex gap-6">
+            <Button 
+              variant="outline"
+              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6 uppercase tracking-wider"
+              onClick={() => window.location.href = "#collection"}
+            >
+              Explore Menu
+            </Button>
+            
+            <Button 
+              variant="outline"
+              className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6 uppercase tracking-wider"
+              onClick={() => window.location.href = "#our-story"}
+            >
+              About Us
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-porcelain animate-bounce">
-        <a href="#features" className="flex flex-col items-center">
-          <span className="text-sm mb-2">Scroll Down</span>
-          <ChevronDown size={20} />
-        </a>
+        {/* Coffee Cup Image */}
+        <div className="absolute right-20 bottom-1/3 hidden lg:block">
+          <img src="/vintage-cup.png" alt="Coffee Cup" className="w-64 h-auto" />
+        </div>
       </div>
     </section>
   );

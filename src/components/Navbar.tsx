@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -21,50 +21,48 @@ const Navbar = () => {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
-          ? 'bg-cream/95 backdrop-blur-sm shadow-md py-2'
+          ? 'bg-shadow/95 backdrop-blur-sm shadow-md py-2'
           : 'bg-transparent py-4'
       )}
     >
       <div className="container mx-auto px-4 flex items-center">
         {/* Logo Section */}
         <div className="flex items-center">
-          <div className="flex flex-col items-start">
-            <a href="#" className="font-cormorant text-3xl font-bold text-brass">
-              The Vintage Cottage
-            </a>
-            <span className="text-xs uppercase tracking-widest text-mahogany">
-              EST. 1952
-            </span>
-          </div>
+          <a href="#" className="font-playfair text-2xl font-bold text-porcelain flex items-center gap-2">
+            <span className="text-brass">☕</span> THE VINTAGE COTTAGE
+          </a>
         </div>
 
-        {/* Desktop Navigation - Centered */}
-        <nav className="hidden md:flex items-center justify-center flex-1">
+        {/* Desktop Navigation - Right Aligned */}
+        <nav className="hidden md:flex items-center justify-end flex-1">
           <div className="flex items-center gap-8">
-            {['Home', 'Collection', 'Gallery', 'Our Story', 'Contact'].map((item) => (
+            {[
+              { name: 'HOME', href: '#' },
+              { name: 'MENU', href: '#collection' },
+              { name: 'ABOUT', href: '#our-story' },
+              { name: 'CONTACT', href: '#contact' },
+            ].map((item) => (
               <a
-                key={item}
-                href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                key={item.name}
+                href={item.href}
                 className={cn(
-                  'font-playfair text-lg transition-colors relative group',
-                  isScrolled ? 'text-mahogany' : 'text-porcelain'
+                  'font-lora text-sm uppercase tracking-wider transition-colors relative group',
+                  isScrolled ? 'text-porcelain' : 'text-porcelain'
                 )}
               >
-                {item}
+                {item.name}
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-brass transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
+            <a 
+              href="#shop" 
+              className="inline-flex items-center justify-center gap-2 text-porcelain"
+            >
+              <ShoppingBag size={18} />
+              <span className="uppercase tracking-wider text-sm">SHOP</span>
+            </a>
           </div>
         </nav>
-
-        {/* Book Appointment Button - Right Aligned */}
-        <Button 
-          className="hidden md:block bg-brass hover:bg-mahogany text-white ml-auto"
-          variant="default"
-          onClick={() => window.location.href = "#contact"}
-        >
-          Book Appointment
-        </Button>
 
         {/* Mobile Menu Button */}
         <button
@@ -72,9 +70,9 @@ const Navbar = () => {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? (
-            <X className={cn(isScrolled ? 'text-mahogany' : 'text-porcelain')} />
+            <X className="text-porcelain" />
           ) : (
-            <Menu className={cn(isScrolled ? 'text-mahogany' : 'text-porcelain')} />
+            <Menu className="text-porcelain" />
           )}
         </button>
       </div>
@@ -82,31 +80,29 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <nav
         className={cn(
-          'md:hidden absolute w-full bg-cream/95 backdrop-blur-sm shadow-md transition-all duration-300 overflow-hidden',
+          'md:hidden absolute w-full bg-shadow/95 backdrop-blur-sm shadow-md transition-all duration-300 overflow-hidden',
           isMobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'
         )}
       >
         <div className="container mx-auto px-4 flex flex-col space-y-4">
-          {['Home', 'Collection', 'Gallery', 'Our Story', 'Contact'].map((item) => (
+          {['HOME', 'MENU', 'ABOUT', 'CONTACT'].map((item) => (
             <a
               key={item}
-              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
-              className="font-playfair text-lg text-mahogany py-2 border-b border-brass/20"
+              href={`#${item.toLowerCase()}`}
+              className="font-lora text-lg text-porcelain py-2 border-b border-brass/20 uppercase tracking-wider"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {item}
             </a>
           ))}
-          <Button 
-            className="bg-brass hover:bg-mahogany text-white mt-2"
-            variant="default"
-            onClick={() => {
-              window.location.href = "#contact";
-              setIsMobileMenuOpen(false);
-            }}
+          <a 
+            href="#shop" 
+            className="font-lora text-lg text-porcelain py-2 border-b border-brass/20 uppercase tracking-wider flex items-center gap-2"
+            onClick={() => setIsMobileMenuOpen(false)}
           >
-            Book Appointment
-          </Button>
+            <ShoppingBag size={18} />
+            <span>SHOP</span>
+          </a>
         </div>
       </nav>
     </header>
