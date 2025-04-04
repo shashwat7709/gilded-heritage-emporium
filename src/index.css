@@ -9,33 +9,33 @@
 
 @layer base {
   :root {
-    --background: 44 40% 97%;
-    --foreground: 36 20% 15%;
+    --background: 39 38% 95%;
+    --foreground: 30 15% 22%;
 
-    --card: 44 40% 97%;
-    --card-foreground: 36 20% 15%;
+    --card: 39 38% 95%;
+    --card-foreground: 30 15% 22%;
 
-    --popover: 44 40% 97%;
-    --popover-foreground: 36 20% 15%;
+    --popover: 39 38% 95%;
+    --popover-foreground: 30 15% 22%;
 
-    --primary: 35 90% 42%;
-    --primary-foreground: 44 100% 98%;
+    --primary: 40 30% 40%;
+    --primary-foreground: 39 38% 95%;
 
-    --secondary: 0 71% 28%;
-    --secondary-foreground: 44 100% 98%;
+    --secondary: 25 25% 35%;
+    --secondary-foreground: 39 38% 95%;
 
-    --muted: 35 30% 90%;
-    --muted-foreground: 36 10% 40%;
+    --muted: 39 20% 85%;
+    --muted-foreground: 30 10% 40%;
 
-    --accent: 35 30% 90%;
-    --accent-foreground: 36 20% 15%;
+    --accent: 39 20% 85%;
+    --accent-foreground: 30 15% 22%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 35 60% 85%;
-    --input: 35 60% 85%;
-    --ring: 35 90% 42%;
+    --border: 39 30% 80%;
+    --input: 39 30% 80%;
+    --ring: 40 30% 40%;
 
     --radius: 0.5rem;
   }
@@ -45,7 +45,7 @@
   }
 
   body {
-    @apply bg-antique-ivory text-foreground font-lora;
+    @apply bg-cream text-foreground font-lora;
   }
   
   h1, h2, h3, h4 {
@@ -58,7 +58,7 @@
   
   .ornate-border::before,
   .ornate-border::after {
-    @apply content-[''] absolute w-20 h-20 bg-antique-gold opacity-30;
+    @apply content-[''] absolute w-20 h-20 bg-brass opacity-30;
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20,0L0,20L0,80L80,0L20,0Z M60,80L80,60L80,0L0,80L60,80Z' fill='%23D4AF37'/%3E%3C/svg%3E");
     mask-size: contain;
     mask-repeat: no-repeat;
@@ -73,11 +73,11 @@
   }
   
   .gold-gradient {
-    @apply bg-gradient-to-r from-amber-700 via-yellow-500 to-amber-700 bg-[length:200%_100%] animate-slow-shine;
+    @apply bg-gradient-to-r from-brass via-brass-light to-brass bg-[length:200%_100%] animate-slow-shine;
   }
   
   .antique-card {
-    @apply bg-[#f8f5f0] border border-antique-gold/30 p-6 rounded-sm shadow-md transition-all duration-300 hover:shadow-xl;
+    @apply bg-cream border border-brass/30 p-6 rounded-sm shadow-md transition-all duration-300 hover:shadow-xl;
   }
   
   .decorative-divider {
@@ -86,10 +86,10 @@
   
   .decorative-divider::before,
   .decorative-divider::after {
-    @apply content-[''] bg-antique-gold/50 h-[1px] w-full mx-4;
+    @apply content-[''] bg-brass/50 h-[1px] w-full mx-4;
   }
   
   .decorative-divider span {
-    @apply text-antique-gold text-xl px-4;
+    @apply text-brass text-xl px-4;
   }
 }

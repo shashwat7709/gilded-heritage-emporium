@@ -63,17 +63,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom colors for the antique shop
-				antique: {
-					gold: '#D4AF37',
-					burgundy: '#800020',
-					royal: '#2E5090',
-					cream: '#F5F5DC',
-					brown: '#8B4513',
-					rust: '#B7410E',
-					sage: '#BCB88A',
-					ivory: '#FFFFF0'
-				}
+				// Custom colors based on the antique shop image
+				cream: '#F5F2E9',
+				brass: '#A89054',
+				'brass-light': '#C4B581',
+				'brass-dark': '#7E6B3A',
+				mahogany: '#8C4A3B',
+				'dark-wood': '#4A3728',
+				'light-wood': '#C0A080',
+				porcelain: '#E8E4D9',
+				shadow: '#2C241D'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
