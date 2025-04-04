@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors for the antique shop
+				antique: {
+					gold: '#D4AF37',
+					burgundy: '#800020',
+					royal: '#2E5090',
+					cream: '#F5F5DC',
+					brown: '#8B4513',
+					rust: '#B7410E',
+					sage: '#BCB88A',
+					ivory: '#FFFFF0'
 				}
 			},
 			borderRadius: {
@@ -84,11 +96,31 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'slow-shine': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 1.5s ease-out forwards',
+				'slow-shine': 'slow-shine 8s ease infinite'
+			},
+			backgroundImage: {
+				'texture-pattern': "url('/texture-pattern.jpg')",
+				'hero-bg': "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('/hero-bg.jpg')"
+			},
+			fontFamily: {
+				'playfair': ['Playfair Display', 'serif'],
+				'lora': ['Lora', 'serif'],
+				'cormorant': ['Cormorant Garamond', 'serif']
 			}
 		}
 	},
