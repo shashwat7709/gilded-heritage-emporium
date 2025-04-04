@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <a href="#" className="flex items-center">
           <span className="font-cormorant text-3xl font-bold text-brass">
-            Vintage Haven
+            The Vintage Cottage
           </span>
           <span className="ml-2 text-xs uppercase tracking-widest text-mahogany mt-1">
             EST. 1952
@@ -55,6 +55,7 @@ const Navbar = () => {
         <Button 
           className="hidden md:block bg-brass hover:bg-mahogany text-white"
           variant="default"
+          onClick={() => window.location.href = "#contact"}
         >
           Book Appointment
         </Button>
@@ -93,6 +94,10 @@ const Navbar = () => {
           <Button 
             className="bg-brass hover:bg-mahogany text-white mt-2"
             variant="default"
+            onClick={() => {
+              window.location.href = "#contact";
+              setIsMobileMenuOpen(false);
+            }}
           >
             Book Appointment
           </Button>

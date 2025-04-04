@@ -11,11 +11,11 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1617419086540-172402d8b6fc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80')",
-          backgroundPosition: "center 30%"
+          backgroundImage: "url('/lovable-uploads/9f7c2b22-34d3-4649-be86-6d3783f3b2b1.png')",
+          backgroundPosition: "center"
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-shadow/70 via-shadow/60 to-shadow/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-shadow/80 via-shadow/70 to-shadow/90"></div>
       </div>
 
       {/* Hero Content */}
@@ -33,10 +33,17 @@ const HeroSection = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
-          <Button className="bg-brass hover:bg-mahogany text-white border border-brass px-8 py-6">
+          <Button 
+            className="bg-brass hover:bg-mahogany text-white border border-brass px-8 py-6"
+            onClick={() => window.location.href = "#collection"}
+          >
             Explore Our Collection
           </Button>
-          <Button variant="outline" className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6">
+          <Button 
+            variant="outline" 
+            className="border-porcelain text-porcelain hover:bg-porcelain/10 px-8 py-6"
+            onClick={() => window.location.href = "#contact"}
+          >
             Book a Private Viewing
           </Button>
         </div>
