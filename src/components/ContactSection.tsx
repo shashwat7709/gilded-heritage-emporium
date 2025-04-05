@@ -9,6 +9,9 @@ const ContactSection = () => {
     message: ''
   });
 
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -17,12 +20,32 @@ const ContactSection = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission placeholder
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('https://formspree.io/f/xpwpyned', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -59,7 +82,7 @@ const ContactSection = () => {
               <div>
                 <h3 className="font-serif text-xl text-text mb-2">Contact</h3>
                 <p className="text-text/70">Phone: (555) 123-4567</p>
-                <p className="text-text/70">Email: shashwat7709@gmail.com</p>
+                <p className="text-text/70">Email: info@vintagecottage.com</p>
               </div>
             </div>
           </motion.div>
@@ -138,11 +161,19 @@ const ContactSection = () => {
                 ></textarea>
               </div>
 
+              {submitStatus === 'success' && (
+                <div className="text-green-600 text-sm">Message sent successfully!</div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="text-red-600 text-sm">Failed to send message. Please try again.</div>
+              )}
+
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors duration-300 font-display text-sm tracking-wide"
+                disabled={isSubmitting}
+                className="w-full px-6 py-3 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors duration-300 font-display text-sm tracking-wide disabled:opacity-50"
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </motion.div>

@@ -1,48 +1,69 @@
 import React from 'react';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import StorySection from "./components/StorySection";
 import GallerySection from './components/GallerySection';
-import TestimonialsSection from './components/TestimonialsSection';
-import ContactSection from "./components/ContactSection";
 import Newsletter from './components/Newsletter';
-import Footer from "./components/Footer";
+import ContactSection from './components/ContactSection';
+import Footer from './components/Footer';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import Shop from './pages/Shop';
+import AboutSection from './components/AboutSection';
+import { ProductProvider } from './context/ProductContext';
 
-const queryClient = new QueryClient();
-
-const App = () => {
+const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-background">
-            <main className="relative">
-              <HeroSection />
-              <div className="relative z-10">
-                <div className="relative overflow-hidden">
-                  <div className="absolute inset-0 bg-pattern opacity-5 pointer-events-none" />
-                  <StorySection />
-                </div>
+    <ProductProvider>
+      <Router>
+        <div className="min-h-screen bg-[#F5F1EA]">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={
+              <>
+                <HeroSection />
                 <GallerySection />
-                <div className="relative overflow-hidden bg-primary/5">
-                  <div className="absolute inset-0 bg-pattern opacity-5 pointer-events-none" />
-                  <TestimonialsSection />
-                </div>
-                <ContactSection />
+                <AboutSection />
                 <Newsletter />
+                <ContactSection />
+              </>
+            } />
+            <Route path="/collection" element={<GallerySection />} />
+            <Route path="/about" element={<div className="min-h-screen bg-[#F5F1EA] py-12">
+              <div className="container mx-auto px-4">
+                <h1 className="text-4xl font-serif text-[#46392d] text-center mb-8">About The Vintage Cottage</h1>
+                <div className="max-w-3xl mx-auto text-[#46392d]">
+                  <p className="mb-4">
+                    Welcome to The Vintage Cottage, your premier destination for unique vintage treasures.
+                    We specialize in curating a collection of jewelry, antiques, furniture, and paintings
+                    that tell stories of the past.
+                  </p>
+                  <p className="mb-4">
+                    Our mission is to bring the charm and character of vintage items to modern homes,
+                    helping you create spaces that reflect your unique style and appreciation for history.
+                  </p>
+                  <p>
+                    Whether you're looking to buy a special piece or sell your own vintage items,
+                    we're here to help you every step of the way.
+                  </p>
+                </div>
               </div>
-            </main>
-            <Footer />
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+            </div>} />
+            <Route path="/contact" element={<ContactSection />} />
+            <Route path="/shop" element={
+              <>
+                <Navbar />
+                <Shop />
+              </>
+            } />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </ProductProvider>
   );
 };
 

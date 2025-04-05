@@ -1,53 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Tilt } from './ui/tilt';
-
-const categories = ['All', 'Crystal & Glass', 'Porcelain', 'Vintage Decor', 'Collectibles'];
-
-const galleryItems = [
-  {
-    id: 1,
-    category: 'Crystal & Glass',
-    image: '/photos/2023-12-14.jpg',
-    title: 'Vintage Glassware',
-    description: 'Elegant pink and ruby crystal collection'
-  },
-  {
-    id: 2,
-    category: 'Crystal & Glass',
-    image: '/photos/2021-12-15.jpg',
-    title: 'Floral Tapestry',
-    description: 'Intricately woven vintage textile art'
-  },
-  {
-    id: 3,
-    category: 'Crystal & Glass',
-    image: '/photos/2023-09-24.jpg',
-    title: 'Classic Collections',
-    description: 'Carefully curated vintage treasures'
-  },
-  {
-    id: 4,
-    category: 'Porcelain',
-    image: '/photos/2024-08-02.jpg',
-    title: 'Heritage Ceramics',
-    description: 'Pieces with stories from heritage'
-  },
-  {
-    id: 5,
-    category: 'Collectibles',
-    image: '/photos/2023-12-14 (1).jpg',
-    title: 'Vintage Textiles',
-    description: 'Hand-crafted textiles with timeless patterns'
-  },
-  {
-    id: 6,
-    category: 'Porcelain',
-    image: '/photos/2021-12-15 (1).jpg',
-    title: 'Heritage Blue Collection',
-    description: 'Classic blue and white porcelain treasures'
-  }
-];
+import { useProducts } from '../context/ProductContext';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -59,24 +13,25 @@ const itemVariants = {
 };
 
 const GallerySection = () => {
+  const { products, categories } = useProducts();
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filteredItems = activeCategory === 'All' 
-    ? galleryItems 
-    : galleryItems.filter(item => item.category === activeCategory);
+    ? products 
+    : products.filter(item => item.category === activeCategory);
 
   return (
-    <section className="py-24 bg-ivory relative overflow-hidden" id="gallery">
+    <section className="py-24 bg-[#F5F1EA] relative overflow-hidden" id="gallery">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-filigree-pattern opacity-5 pointer-events-none" />
+      <div className="absolute inset-0 bg-pattern opacity-5 pointer-events-none" />
       
       <div className="container mx-auto px-4 relative">
         <div className="text-center mb-16">
-          <h2 className="section-title">
+          <h2 className="text-4xl font-serif text-[#46392d] mb-4">
             Curated Collections
           </h2>
-          <p className="section-subtitle">
-            Discover our carefully curated collection of timeless treasures, each piece telling its own unique story
+          <p className="text-[#46392d]/70 max-w-2xl mx-auto">
+            Discover our carefully curated collection of timeless treasures, each piece telling its own unique story of elegance and history.
           </p>
         </div>
 
@@ -86,10 +41,10 @@ const GallerySection = () => {
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`category-button ${
+              className={`px-6 py-2 rounded-md transition-colors ${
                 activeCategory === category
-                  ? 'category-button-active'
-                  : 'category-button-inactive'
+                  ? 'bg-[#46392d] text-[#F5F1EA]'
+                  : 'bg-white text-[#46392d] hover:bg-[#46392d]/10'
               }`}
             >
               {category}
@@ -98,56 +53,31 @@ const GallerySection = () => {
         </div>
 
         {/* Gallery Grid */}
-        <motion.div 
-          layout
-          className="product-grid"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredItems.map((item) => (
-            <motion.div
-              key={item.id}
-              layout
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Tilt
-                className="w-full h-full"
-                rotationFactor={4}
-                isRevese
-                springOptions={{
-                  stiffness: 26.7,
-                  damping: 4.1,
-                  mass: 0.2,
-                }}
+            <Tilt key={item.id}>
+              <motion.div
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-white rounded-lg shadow-md overflow-hidden group"
               >
-                <div className="product-image-container">
-                  <motion.div
-                    className="group relative overflow-hidden rounded-lg shadow-md"
-                    variants={itemVariants}
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.title || 'Gallery item'}
-                      className="w-full h-[280px] md:h-[320px] object-cover transform group-hover:scale-105 transition-transform duration-500"
-                    />
-                    {item.title && item.description && (
-                      <div className="absolute inset-0 p-3 flex flex-col justify-end bg-gradient-to-t from-[#46392d]/80 to-transparent">
-                        <h3 className="text-sm md:text-base font-display text-[#F5F1EA] mb-0.5">{item.title}</h3>
-                        <p className="text-[#F5F1EA]/90 text-xs font-body leading-tight">{item.description}</p>
-                      </div>
-                    )}
-                  </motion.div>
+                <div className="relative overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-              </Tilt>
-            </motion.div>
+                <div className="p-6">
+                  <h3 className="text-xl font-serif text-[#46392d] mb-2">{item.title}</h3>
+                  <p className="text-[#46392d]/70">{item.description}</p>
+                </div>
+              </motion.div>
+            </Tilt>
           ))}
-        </motion.div>
-
-        {/* View More Button */}
-        <div className="text-center mt-16">
-          <button className="heritage-button">
-            View Full Collection
-          </button>
         </div>
       </div>
     </section>

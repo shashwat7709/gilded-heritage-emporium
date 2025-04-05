@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Navigation from './Navigation';
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-ebony overflow-hidden">
+    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden bg-[#F5F1EA]">
       {/* Background Image with lighter overlay */}
       <div className="absolute inset-0">
         <img 
@@ -15,9 +14,6 @@ const HeroSection = () => {
         {/* Lighter overlay for better image visibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-ebony/60 via-ebony/40 to-ebony/60" />
       </div>
-
-      {/* Navigation */}
-      <Navigation />
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 mt-24 text-center">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -52,24 +53,26 @@ const Footer = () => {
           <div>
             <h3 className="font-serif text-xl mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              {['Facebook', 'Instagram', 'Pinterest', 'Twitter'].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="w-10 h-10 rounded-full border border-text-light/20 flex items-center justify-center text-text-light/70 hover:bg-primary hover:border-primary hover:text-text-light transition-all duration-300"
-                  aria-label={social}
-                >
-                  <span className="sr-only">{social}</span>
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10z" />
-                  </svg>
-                </a>
-              ))}
+              <a
+                href="https://www.instagram.com/the_vintage_cottagee/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-text-light/20 flex items-center justify-center text-text-light/70 hover:bg-primary hover:border-primary hover:text-text-light transition-all duration-300"
+                aria-label="Instagram"
+              >
+                <span className="sr-only">Instagram</span>
+                <FaInstagram size={24} />
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-text-light/20 flex items-center justify-center text-text-light/70 hover:bg-primary hover:border-primary hover:text-text-light transition-all duration-300"
+                aria-label="Facebook"
+              >
+                <span className="sr-only">Facebook</span>
+                <FaFacebook size={24} />
+              </a>
             </div>
           </div>
         </div>
