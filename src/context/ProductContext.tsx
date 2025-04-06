@@ -9,14 +9,15 @@ interface Product {
   image: string;
 }
 
-interface AntiqueSubmission {
+export interface AntiqueSubmission {
   id: string;
   title: string;
   description: string;
   price: number;
   category: string;
-  image: string;
+  images: string[];
   phone: string;
+  address: string;
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: string;
 }

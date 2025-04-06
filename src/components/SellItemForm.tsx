@@ -13,7 +13,8 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
     description: '',
     price: '',
     category: '',
-    image: '',
+    images: [] as string[],
+    address: '',
   });
   const [phoneCode, setPhoneCode] = useState('+1');
   const [error, setError] = useState('');
@@ -36,8 +37,18 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
   };
 
   const handleImageSelect = (base64String: string) => {
-    setFormData(prev => ({ ...prev, image: base64String }));
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, base64String]
+    }));
     setError(''); // Clear error when image is selected
+  };
+
+  const removeImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
   };
 
   const validateForm = () => {
@@ -57,8 +68,12 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
       setError('Please select a category');
       return false;
     }
-    if (!formData.image) {
-      setError('Please upload an image');
+    if (formData.images.length === 0) {
+      setError('Please upload at least one image');
+      return false;
+    }
+    if (!formData.address.trim()) {
+      setError('Please enter your address');
       return false;
     }
     return true;
@@ -76,7 +91,8 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
     submitFormData.append('description', formData.description);
     submitFormData.append('price', formData.price);
     submitFormData.append('category', formData.category);
-    submitFormData.append('image', formData.image);
+    submitFormData.append('images', JSON.stringify(formData.images));
+    submitFormData.append('address', formData.address);
     
     const phoneInput = e.currentTarget.elements.namedItem('phone') as HTMLInputElement;
     if (phoneInput && phoneInput.value) {
@@ -124,6 +140,25 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
           className="w-full px-3 py-2 border border-[#46392d]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#46392d] bg-white"
           placeholder="Describe your item's history, condition, and unique features"
         />
+      </div>
+
+      <div>
+        <label htmlFor="address" className="block text-sm font-medium text-[#46392d] mb-1">
+          Address
+        </label>
+        <textarea
+          id="address"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          rows={3}
+          className="w-full px-3 py-2 border border-[#46392d]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#46392d] bg-white"
+          placeholder="Enter your complete address"
+        />
+        <p className="text-sm text-[#46392d]/70 mt-1">
+          This address will be used for item pickup/inspection if needed
+        </p>
       </div>
 
       <div>
@@ -203,6 +238,27 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
           Item Images
         </label>
         <ImageUploader onImageSelect={handleImageSelect} />
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {formData.images.map((image, index) => (
+            <div key={index} className="relative group">
+              <img
+                src={image}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-32 object-contain rounded-md border border-[#46392d]/20"
+              />
+              <button
+                type="button"
+                onClick={() => removeImage(index)}
+                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Remove image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
         <p className="mt-1 text-sm text-[#46392d]/70">
           Please provide clear, well-lit photos of your item from multiple angles
         </p>

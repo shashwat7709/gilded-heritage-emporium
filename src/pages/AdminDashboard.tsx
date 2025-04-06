@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
+import type { AntiqueSubmission } from '../context/ProductContext';
 import { useNotifications } from '../context/NotificationContext';
 import NotificationIcon from '../components/NotificationIcon';
 
@@ -11,18 +12,6 @@ interface Product {
   price: number;
   category: string;
   image: string;
-}
-
-interface AntiqueSubmission {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  status: 'pending' | 'approved' | 'rejected';
-  submittedAt: string;
-  phone: string;
 }
 
 const AdminDashboard: React.FC = () => {
@@ -52,6 +41,8 @@ const AdminDashboard: React.FC = () => {
   const [formError, setFormError] = useState<string>('');
   const [imagePreview, setImagePreview] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   useEffect(() => {
     // Check if admin is logged in
@@ -60,6 +51,11 @@ const AdminDashboard: React.FC = () => {
       navigate('/admin/login');
     }
   }, [navigate]);
+
+  // Reset currentImageIndex when switching tabs
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [activeTab]);
 
   const validateForm = () => {
     if (!editForm.title.trim()) {
@@ -182,6 +178,28 @@ const AdminDashboard: React.FC = () => {
     addNotification(`Submission "${submission.title}" has been rejected.`, 'info', true);
     // Add notification for the user
     addNotification(`Your submission "${submission.title}" has been rejected. Please contact us for more information.`, 'error', false);
+  };
+
+  const handleAddToShop = (submission: AntiqueSubmission) => {
+    addProduct({
+      title: submission.title,
+      description: submission.description,
+      price: submission.price,
+      category: submission.category,
+      image: submission.images[0] // Use the first image as the main product image
+    });
+    addNotification(`"${submission.title}" has been added to the shop.`, 'success', true);
+    addNotification(`Your item "${submission.title}" is now available in the shop!`, 'success', false);
+  };
+
+  const handlePrevImage = (e: React.MouseEvent, images: string[]) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  };
+
+  const handleNextImage = (e: React.MouseEvent, images: string[]) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   };
 
   const filteredProducts = selectedCategory === 'All'
@@ -328,6 +346,31 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
 
+        {/* Image Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div className="relative max-w-4xl w-full h-full flex items-center justify-center">
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 text-white hover:text-gray-300 z-50"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              <img
+                src={selectedImage}
+                alt="Full size preview"
+                className="max-h-full max-w-full object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </div>
+        )}
+
         {activeTab === 'products' ? (
           <>
             {/* Existing Products Management UI */}
@@ -428,15 +471,14 @@ const AdminDashboard: React.FC = () => {
                         <p className="text-[#46392d] font-medium mt-2">${submission.price}</p>
                         <p className="text-sm text-[#46392d]/70">Category: {submission.category}</p>
                         <p className="text-sm text-[#46392d]/70">Phone: {submission.phone}</p>
+                        <p className="text-sm text-[#46392d]/70">Address: {submission.address}</p>
                         <p className="text-sm text-[#46392d]/70">Submitted: {new Date(submission.submittedAt).toLocaleDateString()}</p>
                       </div>
                       <div className="flex items-start space-x-2">
                         <button
                           onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this submission?')) {
-                              deleteSubmission(submission.id);
-                              addNotification(`Submission "${submission.title}" has been deleted.`, 'info', true);
-                            }
+                            deleteSubmission(submission.id);
+                            addNotification(`Submission "${submission.title}" has been deleted.`, 'info', true);
                           }}
                           className="p-1 text-red-600 hover:text-red-800 transition-colors"
                           title="Delete submission"
@@ -471,17 +513,7 @@ const AdminDashboard: React.FC = () => {
                             </span>
                             {submission.status === 'approved' && (
                               <button
-                                onClick={() => {
-                                  addProduct({
-                                    title: submission.title,
-                                    description: submission.description,
-                                    price: submission.price,
-                                    category: submission.category,
-                                    image: submission.image
-                                  });
-                                  addNotification(`"${submission.title}" has been added to the shop.`, 'success', true);
-                                  addNotification(`Your item "${submission.title}" is now available in the shop!`, 'success', false);
-                                }}
+                                onClick={() => handleAddToShop(submission)}
                                 className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                               >
                                 Add to Shop
@@ -493,11 +525,72 @@ const AdminDashboard: React.FC = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <img
-                          src={submission.image}
-                          alt={submission.title}
-                          className="w-full h-64 object-cover rounded-md"
-                        />
+                        <div className="space-y-4">
+                          <div className="relative">
+                            {submission.images && submission.images.length > 0 ? (
+                              <>
+                                <div 
+                                  className="relative cursor-pointer group"
+                                  onClick={() => setSelectedImage(submission.images[currentImageIndex])}
+                                >
+                                  <img
+                                    src={submission.images[currentImageIndex]}
+                                    alt={`${submission.title} - Image ${currentImageIndex + 1}`}
+                                    className="w-full h-64 object-contain rounded-md border border-gray-200"
+                                  />
+                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span className="text-white text-sm">Click to view full image</span>
+                                  </div>
+                                </div>
+                                {submission.images.length > 1 && (
+                                  <>
+                                    <button
+                                      onClick={(e) => handlePrevImage(e, submission.images)}
+                                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                      </svg>
+                                    </button>
+                                    <button
+                                      onClick={(e) => handleNextImage(e, submission.images)}
+                                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                      </svg>
+                                    </button>
+                                  </>
+                                )}
+                              </>
+                            ) : (
+                              <div className="w-full h-64 flex items-center justify-center bg-gray-100 rounded-md border border-gray-200">
+                                <span className="text-gray-400">No images available</span>
+                              </div>
+                            )}
+                          </div>
+                          {submission.images && submission.images.length > 0 && (
+                            <div className="flex gap-2 overflow-x-auto py-2">
+                              {submission.images.map((image, index) => (
+                                <button
+                                  key={index}
+                                  onClick={() => setCurrentImageIndex(index)}
+                                  className={`flex-shrink-0 w-16 h-16 rounded-md border-2 transition-all ${
+                                    currentImageIndex === index
+                                      ? 'border-[#46392d]'
+                                      : 'border-transparent'
+                                  }`}
+                                >
+                                  <img
+                                    src={image}
+                                    alt={`Thumbnail ${index + 1}`}
+                                    className="w-full h-full object-contain rounded-md"
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div>
                         <p className="text-[#46392d]/70 mb-4">{submission.description}</p>
@@ -507,6 +600,12 @@ const AdminDashboard: React.FC = () => {
                           </p>
                           <p className="text-[#46392d]">
                             <strong>Asking Price:</strong> ${submission.price}
+                          </p>
+                          <p className="text-[#46392d]">
+                            <strong>Phone:</strong> {submission.phone}
+                          </p>
+                          <p className="text-[#46392d]">
+                            <strong>Address:</strong> {submission.address}
                           </p>
                         </div>
                       </div>
