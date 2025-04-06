@@ -1,35 +1,27 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useProducts } from '../context/ProductContext';
+import { useCart } from '../context/CartContext';
 import { useNotifications } from '../context/NotificationContext';
 import SellItemForm from '../components/SellItemForm';
 import NotificationIcon from '../components/NotificationIcon';
+import PaymentModal from '../components/PaymentModal';
+import Cart from '../components/Cart';
 
 const Shop: React.FC = () => {
   const { products, categories, addSubmission } = useProducts();
+  const { addToCart, getItemCount, getCartTotal, clearCart } = useCart();
   const { addNotification } = useNotifications();
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [cart, setCart] = useState<Array<{ id: string; quantity: number }>>([]);
-  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [showSellForm, setShowSellForm] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<null | { id: string; title: string; price: number }>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [isCartCheckout, setIsCartCheckout] = useState(false);
 
   const filteredProducts = selectedCategory === 'All'
     ? products
     : products.filter(product => product.category === selectedCategory);
-
-  const addToCart = (productId: string) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === productId);
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevCart, { id: productId, quantity: 1 }];
-    });
-    addNotification('Item added to cart successfully!', 'success', false);
-  };
 
   const handleSellSubmit = (formData: FormData) => {
     const submission = {
@@ -43,10 +35,31 @@ const Shop: React.FC = () => {
     };
     
     addSubmission(submission);
-    setIsSellModalOpen(false);
+    setShowSellForm(false);
     addNotification('Thank you for submitting your item! We will review it and get back to you soon.', 'success', false);
     // Add notification for admin
     addNotification(`New antique submission received: "${submission.title}"`, 'info', true);
+  };
+
+  const handleAddToCart = (product: { id: string; title: string; price: number; image: string }) => {
+    addToCart(product);
+    addNotification(`${product.title} added to cart!`, 'success', false);
+  };
+
+  const handleCheckout = () => {
+    setIsCartCheckout(true);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentComplete = () => {
+    if (isCartCheckout) {
+      addNotification('Thank you for your purchase! You will receive an email with shipping details.', 'success', true);
+      clearCart();
+    } else if (selectedProduct) {
+      addNotification(`Thank you for purchasing ${selectedProduct.title}! You will receive an email with shipping details.`, 'success', true);
+    }
+    setSelectedProduct(null);
+    setIsCartCheckout(false);
   };
 
   return (
@@ -59,7 +72,20 @@ const Shop: React.FC = () => {
           <div className="flex items-center space-x-4">
             <NotificationIcon />
             <button
-              onClick={() => setIsSellModalOpen(true)}
+              onClick={() => setShowCart(true)}
+              className="relative bg-[#46392d] text-white px-4 py-2 rounded-md hover:bg-[#5c4b3d] transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {getItemCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  {getItemCount()}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setShowSellForm(true)}
               className="px-6 py-3 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors duration-300 font-serif"
             >
               Sell Your Antiques
@@ -111,12 +137,23 @@ const Shop: React.FC = () => {
                   <span className="text-xl font-medium text-[#46392d]">
                     ${product.price}
                   </span>
-                  <button
-                    onClick={() => addToCart(product.id)}
-                    className="px-4 py-2 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90 transition-colors"
-                  >
-                    Add to Cart
-                  </button>
+                  <div className="space-x-2">
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className="bg-gray-100 text-[#46392d] px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setShowPaymentModal(true);
+                      }}
+                      className="bg-[#46392d] text-white px-4 py-2 rounded-md hover:bg-[#5c4b3d] transition-colors"
+                    >
+                      Buy Now
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -124,13 +161,13 @@ const Shop: React.FC = () => {
         </div>
 
         {/* Sell Modal */}
-        {isSellModalOpen && (
+        {showSellForm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-[#F5F1EA] p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-serif text-[#46392d]">Sell Your Antiques</h2>
                 <button
-                  onClick={() => setIsSellModalOpen(false)}
+                  onClick={() => setShowSellForm(false)}
                   className="text-[#46392d] hover:text-[#46392d]/70"
                 >
                   ✕
@@ -139,6 +176,25 @@ const Shop: React.FC = () => {
               <SellItemForm onSubmit={handleSellSubmit} />
             </div>
           </div>
+        )}
+
+        <Cart
+          isOpen={showCart}
+          onClose={() => setShowCart(false)}
+          onCheckout={handleCheckout}
+        />
+
+        {(selectedProduct || isCartCheckout) && (
+          <PaymentModal
+            isOpen={showPaymentModal}
+            onClose={() => {
+              setShowPaymentModal(false);
+              setIsCartCheckout(false);
+            }}
+            productTitle={isCartCheckout ? 'Cart Checkout' : selectedProduct?.title || ''}
+            price={isCartCheckout ? getCartTotal() : selectedProduct?.price || 0}
+            onPaymentComplete={handlePaymentComplete}
+          />
         )}
       </div>
     </div>
