@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
+import { useNotifications } from '../context/NotificationContext';
+import NotificationIcon from '../components/NotificationIcon';
 
 interface Product {
   id: string;
@@ -11,11 +13,33 @@ interface Product {
   image: string;
 }
 
+interface AntiqueSubmission {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;
+}
+
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { products, categories, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { 
+    products, 
+    categories, 
+    addProduct, 
+    updateProduct, 
+    deleteProduct,
+    submissions,
+    updateSubmission,
+    deleteSubmission 
+  } = useProducts();
+  const { addNotification } = useNotifications();
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activeTab, setActiveTab] = useState<'products' | 'submissions'>('products');
   const [editForm, setEditForm] = useState<Product>({
     id: '',
     title: '',
@@ -136,6 +160,29 @@ const AdminDashboard: React.FC = () => {
     navigate('/admin/login');
   };
 
+  const handleApproveSubmission = (submission: AntiqueSubmission) => {
+    // Update submission status only
+    updateSubmission({
+      ...submission,
+      status: 'approved'
+    });
+
+    addNotification(`Submission "${submission.title}" has been approved. You can now add it to the shop from the Products tab.`, 'success', true);
+    // Add notification for the user
+    addNotification(`Your submission "${submission.title}" has been approved! The admin can now add it to the shop.`, 'success', false);
+  };
+
+  const handleRejectSubmission = (submission: AntiqueSubmission) => {
+    updateSubmission({
+      ...submission,
+      status: 'rejected'
+    });
+
+    addNotification(`Submission "${submission.title}" has been rejected.`, 'info', true);
+    // Add notification for the user
+    addNotification(`Your submission "${submission.title}" has been rejected. Please contact us for more information.`, 'error', false);
+  };
+
   const filteredProducts = selectedCategory === 'All'
     ? products
     : products.filter(product => product.category === selectedCategory);
@@ -240,91 +287,225 @@ const AdminDashboard: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-serif text-[#46392d]">Admin Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90"
-          >
-            Logout
-          </button>
-        </div>
-
-        {/* Add New Product Button */}
-        {!isEditing && (
-          <button
-            onClick={() => {
-              setIsEditing('new');
-              setEditForm({
-                id: 'new',
-                title: '',
-                description: '',
-                price: 0,
-                category: '',
-                image: ''
-              });
-              setImagePreview('');
-              setFormError('');
-              if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-              }
-            }}
-            className="mb-8 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
-            Add New Product
-          </button>
-        )}
-
-        {/* Edit Form */}
-        {isEditing && renderForm()}
-
-        {/* Category Filter */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          {categories.map((category) => (
+          <div className="flex items-center space-x-4">
+            <NotificationIcon />
             <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-md transition-colors ${
-                selectedCategory === category
-                  ? 'bg-[#46392d] text-[#F5F1EA]'
-                  : 'bg-white text-[#46392d] hover:bg-[#46392d]/10'
-              }`}
+              onClick={handleLogout}
+              className="px-4 py-2 bg-[#46392d] text-[#F5F1EA] rounded-md hover:bg-[#46392d]/90"
             >
-              {category}
+              Logout
             </button>
-          ))}
+          </div>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-lg font-serif text-[#46392d]">{product.title}</h3>
-                <p className="text-sm text-[#46392d]/70">{product.description}</p>
-                <p className="text-[#46392d] font-medium mt-2">${product.price}</p>
-                <p className="text-sm text-[#46392d]/70">Category: {product.category}</p>
-                <div className="mt-4 flex justify-end space-x-2">
-                  <button
-                    onClick={() => handleEdit(product)}
-                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product.id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Tab Navigation */}
+        <div className="flex gap-4 mb-8">
+          <button
+            onClick={() => setActiveTab('products')}
+            className={`px-6 py-2 rounded-md transition-colors ${
+              activeTab === 'products'
+                ? 'bg-[#46392d] text-[#F5F1EA]'
+                : 'bg-white text-[#46392d] hover:bg-[#46392d]/10'
+            }`}
+          >
+            Products
+          </button>
+          <button
+            onClick={() => setActiveTab('submissions')}
+            className={`px-6 py-2 rounded-md transition-colors flex items-center ${
+              activeTab === 'submissions'
+                ? 'bg-[#46392d] text-[#F5F1EA]'
+                : 'bg-white text-[#46392d] hover:bg-[#46392d]/10'
+            }`}
+          >
+            Submissions
+            {submissions.filter(s => s.status === 'pending').length > 0 && (
+              <span className="ml-2 px-2 py-0.5 bg-red-500 text-white text-sm rounded-full">
+                {submissions.filter(s => s.status === 'pending').length}
+              </span>
+            )}
+          </button>
         </div>
+
+        {activeTab === 'products' ? (
+          <>
+            {/* Existing Products Management UI */}
+            {!isEditing && (
+              <button
+                onClick={() => {
+                  setIsEditing('new');
+                  setEditForm({
+                    id: 'new',
+                    title: '',
+                    description: '',
+                    price: 0,
+                    category: '',
+                    image: ''
+                  });
+                  setImagePreview('');
+                  setFormError('');
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                  }
+                }}
+                className="mb-8 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Add New Product
+              </button>
+            )}
+
+            {isEditing && renderForm()}
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap gap-4 mb-8">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-md transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-[#46392d] text-[#F5F1EA]'
+                      : 'bg-white text-[#46392d] hover:bg-[#46392d]/10'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-serif text-[#46392d]">{product.title}</h3>
+                    <p className="text-sm text-[#46392d]/70">{product.description}</p>
+                    <p className="text-[#46392d] font-medium mt-2">${product.price}</p>
+                    <p className="text-sm text-[#46392d]/70">Category: {product.category}</p>
+                    <div className="mt-4 flex justify-end space-x-2">
+                      <button
+                        onClick={() => handleEdit(product)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Submissions Review UI */}
+            <div className="grid grid-cols-1 gap-6">
+              {submissions.map((submission) => (
+                <div 
+                  key={submission.id} 
+                  className={`bg-white rounded-lg shadow-md overflow-hidden ${
+                    submission.status === 'pending' ? 'border-2 border-yellow-500' :
+                    submission.status === 'approved' ? 'border-2 border-green-500' :
+                    'border-2 border-red-500'
+                  }`}
+                >
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-xl font-serif text-[#46392d]">{submission.title}</h3>
+                        <p className="text-sm text-[#46392d]/70">
+                          Submitted: {new Date(submission.submittedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex items-center">
+                        {submission.status === 'pending' ? (
+                          <>
+                            <button
+                              onClick={() => handleApproveSubmission(submission)}
+                              className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 mr-2"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleRejectSubmission(submission)}
+                              className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <span className={`px-3 py-1 rounded-md ${
+                              submission.status === 'approved' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}
+                            </span>
+                            {submission.status === 'approved' && (
+                              <button
+                                onClick={() => {
+                                  addProduct({
+                                    title: submission.title,
+                                    description: submission.description,
+                                    price: submission.price,
+                                    category: submission.category,
+                                    image: submission.image
+                                  });
+                                  addNotification(`"${submission.title}" has been added to the shop.`, 'success', true);
+                                  addNotification(`Your item "${submission.title}" is now available in the shop!`, 'success', false);
+                                }}
+                                className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                              >
+                                Add to Shop
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <img
+                          src={submission.image}
+                          alt={submission.title}
+                          className="w-full h-64 object-cover rounded-md"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-[#46392d]/70 mb-4">{submission.description}</p>
+                        <div className="space-y-2">
+                          <p className="text-[#46392d]">
+                            <strong>Category:</strong> {submission.category}
+                          </p>
+                          <p className="text-[#46392d]">
+                            <strong>Asking Price:</strong> ${submission.price}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {submissions.length === 0 && (
+                <div className="text-center py-12 text-[#46392d]/70">
+                  No submissions to review at this time.
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

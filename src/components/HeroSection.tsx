@@ -7,7 +7,7 @@ const HeroSection = () => {
       {/* Background Image with lighter overlay */}
       <div className="absolute inset-0">
         <img 
-          src="/photos/2021-09-26 (1).png" 
+          src="/photos/general/2021-09-26(1).png" 
           alt="Heritage Background" 
           className="object-cover w-full h-full brightness-90"
         />

@@ -9,6 +9,17 @@ interface Product {
   image: string;
 }
 
+interface AntiqueSubmission {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  image: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;
+}
+
 interface ProductContextType {
   products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
@@ -16,6 +27,10 @@ interface ProductContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (product: Product) => void;
   deleteProduct: (productId: string) => void;
+  submissions: AntiqueSubmission[];
+  addSubmission: (submission: Omit<AntiqueSubmission, 'id' | 'status' | 'submittedAt'>) => void;
+  updateSubmission: (submission: AntiqueSubmission) => void;
+  deleteSubmission: (submissionId: string) => void;
 }
 
 const categories = [
@@ -27,7 +42,8 @@ const categories = [
   'Tableware',
   'Wall Art',
   'Antique Books',
-  'Garden & Outdoor'
+  'Garden & Outdoor',
+  'Others'
 ];
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -42,15 +58,24 @@ export const useProducts = () => {
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
-    // Try to load products from localStorage
     const savedProducts = localStorage.getItem('products');
     return savedProducts ? JSON.parse(savedProducts) : initialProducts;
+  });
+
+  const [submissions, setSubmissions] = useState<AntiqueSubmission[]>(() => {
+    const savedSubmissions = localStorage.getItem('antiqueSubmissions');
+    return savedSubmissions ? JSON.parse(savedSubmissions) : [];
   });
 
   // Save products to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('products', JSON.stringify(products));
   }, [products]);
+
+  // Save submissions to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('antiqueSubmissions', JSON.stringify(submissions));
+  }, [submissions]);
 
   const addProduct = (product: Omit<Product, 'id'>) => {
     const newProduct = {
@@ -68,6 +93,24 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setProducts(prev => prev.filter(p => p.id !== productId));
   };
 
+  const addSubmission = (submission: Omit<AntiqueSubmission, 'id' | 'status' | 'submittedAt'>) => {
+    const newSubmission: AntiqueSubmission = {
+      ...submission,
+      id: String(Date.now()),
+      status: 'pending',
+      submittedAt: new Date().toISOString()
+    };
+    setSubmissions(prev => [...prev, newSubmission]);
+  };
+
+  const updateSubmission = (submission: AntiqueSubmission) => {
+    setSubmissions(prev => prev.map(s => s.id === submission.id ? submission : s));
+  };
+
+  const deleteSubmission = (submissionId: string) => {
+    setSubmissions(prev => prev.filter(s => s.id !== submissionId));
+  };
+
   return (
     <ProductContext.Provider value={{
       products,
@@ -75,7 +118,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       categories,
       addProduct,
       updateProduct,
-      deleteProduct
+      deleteProduct,
+      submissions,
+      addSubmission,
+      updateSubmission,
+      deleteSubmission
     }}>
       {children}
     </ProductContext.Provider>
