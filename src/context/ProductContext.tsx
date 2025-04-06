@@ -16,6 +16,7 @@ interface AntiqueSubmission {
   price: number;
   category: string;
   image: string;
+  phone: string;
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: string;
 }

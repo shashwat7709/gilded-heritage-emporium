@@ -22,6 +22,7 @@ interface AntiqueSubmission {
   image: string;
   status: 'pending' | 'approved' | 'rejected';
   submittedAt: string;
+  phone: string;
 }
 
 const AdminDashboard: React.FC = () => {
@@ -423,11 +424,27 @@ const AdminDashboard: React.FC = () => {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-serif text-[#46392d]">{submission.title}</h3>
-                        <p className="text-sm text-[#46392d]/70">
-                          Submitted: {new Date(submission.submittedAt).toLocaleDateString()}
-                        </p>
+                        <p className="text-sm text-[#46392d]/70">{submission.description}</p>
+                        <p className="text-[#46392d] font-medium mt-2">${submission.price}</p>
+                        <p className="text-sm text-[#46392d]/70">Category: {submission.category}</p>
+                        <p className="text-sm text-[#46392d]/70">Phone: {submission.phone}</p>
+                        <p className="text-sm text-[#46392d]/70">Submitted: {new Date(submission.submittedAt).toLocaleDateString()}</p>
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-start space-x-2">
+                        <button
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this submission?')) {
+                              deleteSubmission(submission.id);
+                              addNotification(`Submission "${submission.title}" has been deleted.`, 'info', true);
+                            }
+                          }}
+                          className="p-1 text-red-600 hover:text-red-800 transition-colors"
+                          title="Delete submission"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                          </svg>
+                        </button>
                         {submission.status === 'pending' ? (
                           <>
                             <button

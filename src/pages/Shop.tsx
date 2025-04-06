@@ -37,7 +37,8 @@ const Shop: React.FC = () => {
       description: formData.get('description') as string,
       price: parseFloat(formData.get('price') as string),
       category: formData.get('category') as string,
-      image: URL.createObjectURL(formData.get('image') as File),
+      image: formData.get('image') as string,
+      phone: formData.get('phone') as string,
     };
     
     addSubmission(submission);

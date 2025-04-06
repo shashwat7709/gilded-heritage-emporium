@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProducts } from '../context/ProductContext';
+import ImageUploader from './ImageUploader';
 
 interface SellItemFormProps {
   onSubmit: (formData: FormData) => void;
@@ -12,9 +13,10 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
     description: '',
     price: '',
     category: '',
-    image: null as File | null,
+    image: '',
   });
-  const [phoneCode, setPhoneCode] = useState('+1'); // Default to US code
+  const [phoneCode, setPhoneCode] = useState('+1');
+  const [error, setError] = useState('');
 
   const countryCodes = [
     { code: '+1', country: 'USA/Canada' },
@@ -25,30 +27,73 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
     { code: '+81', country: 'Japan' },
     { code: '+49', country: 'Germany' },
     { code: '+33', country: 'France' },
-    // Add more country codes as needed
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError(''); // Clear error when user makes changes
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData(prev => ({ ...prev, image: e.target.files![0] }));
+  const handleImageSelect = (base64String: string) => {
+    setFormData(prev => ({ ...prev, image: base64String }));
+    setError(''); // Clear error when image is selected
+  };
+
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      setError('Please enter a title');
+      return false;
     }
+    if (!formData.description.trim()) {
+      setError('Please enter a description');
+      return false;
+    }
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      setError('Please enter a valid price');
+      return false;
+    }
+    if (!formData.category) {
+      setError('Please select a category');
+      return false;
+    }
+    if (!formData.image) {
+      setError('Please upload an image');
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const phoneNumber = `${phoneCode}${formData.get('phone')}`;
-    formData.set('phone', phoneNumber);
-    onSubmit(formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    const submitFormData = new FormData();
+    submitFormData.append('title', formData.title);
+    submitFormData.append('description', formData.description);
+    submitFormData.append('price', formData.price);
+    submitFormData.append('category', formData.category);
+    submitFormData.append('image', formData.image);
+    
+    const phoneInput = e.currentTarget.elements.namedItem('phone') as HTMLInputElement;
+    if (phoneInput && phoneInput.value) {
+      submitFormData.append('phone', `${phoneCode}${phoneInput.value}`);
+    }
+
+    onSubmit(submitFormData);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span className="block sm:inline">{error}</span>
+        </div>
+      )}
+
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-[#46392d] mb-1">
           Item Title
@@ -154,18 +199,10 @@ const SellItemForm: React.FC<SellItemFormProps> = ({ onSubmit }) => {
       </div>
 
       <div>
-        <label htmlFor="image" className="block text-sm font-medium text-[#46392d] mb-1">
+        <label className="block text-sm font-medium text-[#46392d] mb-1">
           Item Images
         </label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          onChange={handleImageChange}
-          required
-          className="w-full px-3 py-2 border border-[#46392d]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#46392d] bg-white"
-        />
+        <ImageUploader onImageSelect={handleImageSelect} />
         <p className="mt-1 text-sm text-[#46392d]/70">
           Please provide clear, well-lit photos of your item from multiple angles
         </p>
