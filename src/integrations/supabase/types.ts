@@ -9,6 +9,110 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      antique_submissions: {
+        Row: {
+          address: string
+          category: string
+          description: string | null
+          id: string
+          images: string[]
+          phone: string
+          price: number
+          status: string
+          submitted_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          category: string
+          description?: string | null
+          id?: string
+          images: string[]
+          phone: string
+          price: number
+          status?: string
+          submitted_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          category?: string
+          description?: string | null
+          id?: string
+          images?: string[]
+          phone?: string
+          price?: number
+          status?: string
+          submitted_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cart_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          product_id: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          product_id: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          product_id?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image: string
+          price: number
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image: string
+          price: number
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image?: string
+          price?: number
+          title?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

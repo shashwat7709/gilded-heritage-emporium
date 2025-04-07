@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HeroSection from './components/HeroSection';
@@ -8,9 +9,19 @@ import ContactSection from './components/ContactSection';
 import Shop from './pages/Shop';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import Auth from './pages/Auth';
 import Footer from './components/Footer';
+import { useAuth } from './context/AuthContext';
 
 const AppRoutes: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (!user) return <Navigate to="/auth" />;
+    return <>{children}</>;
+  };
+
   return (
     <>
       <Routes>
@@ -48,8 +59,13 @@ const AppRoutes: React.FC = () => {
         } />
         <Route path="/contact" element={<ContactSection />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/auth" element={<Auth />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
@@ -57,4 +73,4 @@ const AppRoutes: React.FC = () => {
   );
 };
 
-export default AppRoutes; 
+export default AppRoutes;
