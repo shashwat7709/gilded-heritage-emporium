@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -52,7 +51,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+    <nav className={`fixed w-full top-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-white/95 shadow-sm py-4'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-2xl font-serif text-[#46392d] hover:text-[#46392d]/90 transition-colors">
