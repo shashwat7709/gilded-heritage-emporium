@@ -123,7 +123,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
         
         if (data) {
-          const formattedSubmissions = data.map(item => ({
+          const formattedSubmissions = data.map((item: any) => ({
             id: item.id,
             title: item.title,
             description: item.description,
