@@ -1,181 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
-const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
-  const { user, signOut } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
-
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-    closeMenu();
-  };
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/shop' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' }
-  ];
-
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === path;
-    }
-    return location.pathname.startsWith(path);
-  };
-
   return (
-    <nav className={`fixed w-full top-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-white/95 shadow-sm py-4'}`}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-serif text-[#46392d] hover:text-[#46392d]/90 transition-colors">
-            The Vintage Cottage
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`text-lg transition-colors ${
-                  isActive(link.path)
-                    ? 'text-[#46392d] font-medium'
-                    : 'text-[#46392d]/80 hover:text-[#46392d]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            {user ? (
-              <div className="flex items-center space-x-4">
-                {user.email && (
-                  <span className="text-[#46392d]/80 text-sm">
-                    {user.email}
-                  </span>
-                )}
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-[#46392d] text-white rounded hover:bg-[#46392d]/90 transition-colors"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/auth"
-                className="px-4 py-2 bg-[#46392d] text-white rounded hover:bg-[#46392d]/90 transition-colors"
-              >
-                Sign In
-              </Link>
-            )}
-          </div>
-          
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden text-[#46392d] focus:outline-none"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+    <header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isScrolled
+          ? 'bg-antique-cream/95 backdrop-blur-sm shadow-md py-2'
+          : 'bg-transparent py-4'
+      )}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <a href="#" className="flex items-center">
+          <span className="font-cormorant text-3xl font-bold text-antique-gold">
+            Gilded Heritage
+          </span>
+          <span className="ml-2 text-xs uppercase tracking-widest text-antique-burgundy mt-1">
+            EST. 1947
+          </span>
+        </a>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
+          {['Home', 'Collection', 'Gallery', 'Our Story', 'Contact'].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+              className={cn(
+                'font-playfair text-lg transition-colors relative group',
+                isScrolled ? 'text-antique-burgundy' : 'text-antique-cream'
+              )}
             >
-              {isOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
-        
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden mt-4 pb-4">
-            <div className="flex flex-col space-y-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={closeMenu}
-                  className={`text-lg transition-colors ${
-                    isActive(link.path)
-                      ? 'text-[#46392d] font-medium'
-                      : 'text-[#46392d]/80 hover:text-[#46392d]'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              
-              {user ? (
-                <div className="flex flex-col space-y-2">
-                  {user.email && (
-                    <span className="text-[#46392d]/80 text-sm">
-                      {user.email}
-                    </span>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-[#46392d] text-white rounded hover:bg-[#46392d]/90 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  to="/auth"
-                  onClick={closeMenu}
-                  className="px-4 py-2 bg-[#46392d] text-white rounded hover:bg-[#46392d]/90 transition-colors"
-                >
-                  Sign In
-                </Link>
-              )}
-            </div>
-          </div>
-        )}
+              {item}
+              <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-antique-gold transition-all duration-300 group-hover:w-full"></span>
+            </a>
+          ))}
+        </nav>
+
+        <Button 
+          className="hidden md:block bg-antique-gold hover:bg-antique-burgundy text-white"
+          variant="default"
+        >
+          Book Appointment
+        </Button>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-2xl"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? (
+            <X className={cn(isScrolled ? 'text-antique-burgundy' : 'text-antique-cream')} />
+          ) : (
+            <Menu className={cn(isScrolled ? 'text-antique-burgundy' : 'text-antique-cream')} />
+          )}
+        </button>
       </div>
-    </nav>
+
+      {/* Mobile Menu */}
+      <nav
+        className={cn(
+          'md:hidden absolute w-full bg-antique-cream/95 backdrop-blur-sm shadow-md transition-all duration-300 overflow-hidden',
+          isMobileMenuOpen ? 'max-h-96 py-4' : 'max-h-0'
+        )}
+      >
+        <div className="container mx-auto px-4 flex flex-col space-y-4">
+          {['Home', 'Collection', 'Gallery', 'Our Story', 'Contact'].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+              className="font-playfair text-lg text-antique-burgundy py-2 border-b border-antique-gold/20"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {item}
+            </a>
+          ))}
+          <Button 
+            className="bg-antique-gold hover:bg-antique-burgundy text-white mt-2"
+            variant="default"
+          >
+            Book Appointment
+          </Button>
+        </div>
+      </nav>
+    </header>
   );
 };
 

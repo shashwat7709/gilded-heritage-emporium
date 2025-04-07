@@ -1,63 +1,78 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
 
 const categories = [
   {
     id: 1,
-    name: 'Jewelry',
-    image: '/photos/products/2021-06-21.jpg',
-    description: 'Timeless pieces with unique character and history',
+    title: 'Royal Furniture',
+    description: 'Exquisite hand-carved pieces that once adorned palaces',
+    image: 'https://images.unsplash.com/photo-1557367184-663fba4b8b91?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
   },
   {
     id: 2,
-    name: 'Furniture',
-    image: '/photos/products/2022-02-13.jpg',
-    description: 'Classic furniture that brings vintage charm to your space',
+    title: 'Vintage Jewelry',
+    description: 'Kundan, Meenakari, and Polki masterpieces of bygone eras',
+    image: 'https://images.unsplash.com/photo-1601821765780-754fa98637c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1674&q=80',
   },
   {
     id: 3,
-    name: 'Antiques',
-    image: '/photos/products/2023-09-24.jpg',
-    description: 'Rare finds with stories to tell',
+    title: 'Art & Paintings',
+    description: 'Mughal and Rajasthani miniatures telling tales of royalty',
+    image: 'https://images.unsplash.com/photo-1578926375605-eaf7559b1458?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1772&q=80',
   },
   {
     id: 4,
-    name: 'Paintings',
-    image: '/photos/products/2021-12-15.jpg',
-    description: 'Artistic expressions from various eras',
-  },
+    title: 'Rare Artifacts',
+    description: 'Brass figurines, timepieces, and collectibles with history',
+    image: 'https://images.unsplash.com/photo-1584283367830-7875dd39f6d2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+  }
 ];
 
-const FeaturedCategories: React.FC = () => {
+const FeaturedCategories = () => {
   return (
-    <section className="py-16 bg-[#FAF6F1]">
+    <section id="collection" className="py-20 bg-antique-ivory">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-serif text-center text-[#46392d] mb-12">
-          Our Collection Categories
-        </h2>
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-playfair font-bold text-antique-burgundy mb-4">
+            Our Curated Collection
+          </h2>
+          <div className="decorative-divider">
+            <span>✦</span>
+          </div>
+          <p className="max-w-2xl mx-auto text-lg text-gray-700">
+            Each item in our emporium is meticulously sourced from royal estates, 
+            private collections, and historical auctions to ensure authenticity and provenance.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category) => (
             <div 
               key={category.id} 
-              className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
+              className="group relative overflow-hidden rounded-sm cursor-pointer"
             >
-              <div className="h-64 overflow-hidden">
+              <div className="aspect-w-3 aspect-h-4 h-[400px] overflow-hidden">
                 <img 
                   src={category.image} 
-                  alt={category.name} 
-                  className="w-full h-full object-cover"
+                  alt={category.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-serif text-[#46392d] mb-2">{category.name}</h3>
-                <p className="text-[#665e56] mb-4">{category.description}</p>
-                <Link 
-                  to="/shop" 
-                  className="inline-block px-6 py-2 bg-[#d9c5b0] text-[#46392d] rounded hover:bg-[#c4af98] transition-colors"
-                >
-                  Explore
-                </Link>
+              
+              <div className="absolute bottom-0 left-0 right-0 p-6 transition-all duration-300 group-hover:bottom-4">
+                <h3 className="text-xl font-playfair font-bold text-white">
+                  {category.title}
+                </h3>
+                <p className="text-white/80 mt-2 text-sm max-w-[250px]">
+                  {category.description}
+                </p>
+                <div className="mt-4 flex items-center text-antique-gold text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span>Explore Collection</span>
+                  <ChevronRight size={16} className="ml-1" />
+                </div>
               </div>
             </div>
           ))}

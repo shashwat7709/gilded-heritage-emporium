@@ -1,61 +1,53 @@
+
 import React from 'react';
-import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden bg-[#F5F1EA]">
-      {/* Background Image with lighter overlay */}
-      <div className="absolute inset-0">
-        <img 
-          src="/photos/general/2021-09-26(1).png" 
-          alt="Heritage Background" 
-          className="object-cover w-full h-full brightness-90"
-        />
-        {/* Lighter overlay for better image visibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ebony/60 via-ebony/40 to-ebony/60" />
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ 
+          backgroundImage: "url('https://images.unsplash.com/photo-1515592302748-6937af0215b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')",
+          backgroundPosition: "center 30%"
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 mt-24 text-center">
-        <motion.h1 
-          className="text-4xl md:text-6xl lg:text-7xl font-display text-gold mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          The Vintage Cottage
-        </motion.h1>
-        <motion.p 
-          className="text-lg md:text-xl text-ivory/90 max-w-2xl mx-auto mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          Discover timeless treasures and antique wonders in our carefully curated collection
-        </motion.p>
-      </div>
-
-      {/* Decorative Corner Borders */}
-      <div className="absolute top-8 left-8 w-32 h-32 border-l-2 border-t-2 border-gold/50" />
-      <div className="absolute top-8 right-8 w-32 h-32 border-r-2 border-t-2 border-gold/50" />
-      <div className="absolute bottom-8 left-8 w-32 h-32 border-l-2 border-b-2 border-gold/50" />
-      <div className="absolute bottom-8 right-8 w-32 h-32 border-r-2 border-b-2 border-gold/50" />
-
-      {/* Certified Authentic Badge */}
-      <div className="absolute top-6 right-8 z-20">
-        <div className="bg-[#46392d]/90 text-ivory px-6 py-3 rounded-lg border border-gold/20 shadow-lg backdrop-blur-sm">
-          <span className="font-display text-sm uppercase tracking-wider">Certified Authentic</span>
+      {/* Hero Content */}
+      <div className="container mx-auto px-4 relative z-10 text-center">
+        <h1 className="text-4xl md:text-5xl lg:text-7xl font-playfair font-bold text-antique-cream mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.3s' }}>
+          <span className="block">Discover the</span>
+          <span className="text-antique-gold italic">Gilded Heritage</span>
+        </h1>
+        
+        <div className="w-24 h-1 bg-antique-gold mx-auto my-8 animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}></div>
+        
+        <p className="max-w-2xl mx-auto text-lg md:text-xl text-antique-cream/90 mb-10 animate-fade-in opacity-0" style={{ animationDelay: '0.9s' }}>
+          Step into our exquisite emporium of timeless treasures, where each artifact 
+          narrates a tale of India's royal splendor and artistic magnificence.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
+          <Button className="bg-antique-gold hover:bg-antique-burgundy text-white border border-antique-gold px-8 py-6">
+            Explore Our Collection
+          </Button>
+          <Button variant="outline" className="border-antique-cream text-antique-cream hover:bg-antique-cream/10 px-8 py-6">
+            Book a Private Viewing
+          </Button>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-ivory flex flex-col items-center z-20">
-        <span className="text-sm font-body mb-4 text-gold drop-shadow-lg">Scroll to Explore</span>
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-0.5 h-16 bg-gradient-to-b from-gold to-transparent"
-        />
+      {/* Scroll Down Indicator */}
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-antique-cream animate-bounce">
+        <a href="#features" className="flex flex-col items-center">
+          <span className="text-sm mb-2">Scroll Down</span>
+          <ChevronDown size={20} />
+        </a>
       </div>
     </section>
   );
